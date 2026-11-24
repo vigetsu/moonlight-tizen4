@@ -1,0 +1,8 @@
+bridge/build/
+build/
+testdata/
+*.wgt
+.buildResult/
+.sign/
+.project
+.tproject

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1920, height=1080, user-scalable=no">
+  <title>Moonlight T4</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Bridge connection -->
+  <section id="screen-connect" class="screen">
+    <h1>Moonlight <span class="accent">T4</span></h1>
+    <p class="hint">Köprü programının çalıştığı bilgisayarın IP adresini girin.</p>
+    <div class="row">
+      <input id="bridge-ip" class="focusable" type="text" placeholder="192.168.1.20" autocomplete="off">
+      <button id="btn-connect" class="focusable">Bağlan</button>
+    </div>
+    <p id="connect-status" class="status"></p>
+  </section>
+
+  <!-- Pairing -->
+  <section id="screen-pair" class="screen">
+    <h1 id="pair-host">Bilgisayar</h1>
+    <p class="hint">Bu TV henüz bu bilgisayarla eşleşmedi.</p>
+    <button id="btn-pair" class="focusable">Eşleştir</button>
+    <div id="pin-box" class="pin-box hidden">
+      <p>Bilgisayarda Sunshine web arayüzünü açın (<b>https://localhost:47990</b>),
+         <b>PIN</b> sekmesine şu kodu girin:</p>
+      <div id="pin" class="pin">----</div>
+      <p class="status">Kod girilene kadar bekleniyor…</p>
+    </div>
+    <button id="btn-change-bridge-pair" class="focusable secondary">Köprü adresini değiştir</button>
+  </section>
+
+  <!-- App list -->
+  <section id="screen-apps" class="screen">
+    <div class="topbar">
+      <h1 id="apps-host">Bilgisayar</h1>
+      <div class="topbar-buttons">
+        <button id="btn-settings" class="focusable secondary">Ayarlar</button>
+        <button id="btn-refresh" class="focusable secondary">Yenile</button>
+      </div>
+    </div>
+    <div id="app-grid" class="grid"></div>
+    <p id="apps-status" class="status"></p>
+  </section>
+
+  <!-- Settings -->
+  <section id="screen-settings" class="screen">
+    <h1>Ayarlar</h1>
+    <div class="settings">
+      <button class="focusable setting" data-key="res">Çözünürlük: <span></span></button>
+      <button class="focusable setting" data-key="fps">Kare hızı: <span></span></button>
+      <button class="focusable setting" data-key="bitrate">Bit hızı: <span></span></button>
+      <button class="focusable setting" data-key="hostAudio">Sesi PC'de de çal: <span></span></button>
+      <button class="focusable setting" data-key="stats">Başlangıçta istatistikleri göster: <span></span></button>
+      <button id="btn-change-bridge" class="focusable secondary">Köprü adresini değiştir</button>
+      <button id="btn-settings-back" class="focusable">Geri</button>
+    </div>
+    <p class="hint small">OK tuşu değeri değiştirir. 1080p60 ve 20 Mbps iyi bir başlangıçtır.</p>
+  </section>
+
+  <!-- Streaming -->
+  <section id="screen-stream" class="screen">
+    <video id="video" muted playsinline></video>
+    <div id="stream-status" class="stream-status"></div>
+    <pre id="stats" class="stats hidden"></pre>
+    <div id="stream-menu" class="menu hidden">
+      <h2>Yayın</h2>
+      <button id="btn-resume" class="focusable">Devam et</button>
+      <button id="btn-toggle-stats" class="focusable">İstatistikler</button>
+      <button id="btn-disconnect" class="focusable">Bağlantıyı kes (oyun açık kalsın)</button>
+      <button id="btn-quit" class="focusable danger">Oyunu kapat</button>
+      <p class="hint small">Uzun GERİ veya KIRMIZI: bu menü · YEŞİL: istatistik · MAVİ: kumanda modu</p>
+    </div>
+  </section>
+
+  <!-- Running-game dialog -->
+  <div id="dialog" class="menu hidden">
+    <h2 id="dialog-title"></h2>
+    <div id="dialog-buttons"></div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+  <div id="error" class="error hidden"></div>
+
+  <script src="js/player.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

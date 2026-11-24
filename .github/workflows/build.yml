@@ -1,0 +1,59 @@
+name: build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y libssl-dev libopus-dev ffmpeg
+      - name: Build
+        run: |
+          cmake -S bridge -B bridge/build -DCMAKE_BUILD_TYPE=Release
+          cmake --build bridge/build -j4
+      - name: Smoke test (test mode stream through the fMP4 muxer)
+        run: |
+          sh tools/make-test-video.sh 1280x720 60
+          node tools/smoke-test.mjs bridge/build/moonlight-bridge testdata/test-1280x720-60.h264
+      - uses: actions/upload-artifact@v4
+        with:
+          name: moonlight-bridge-linux-x64
+          path: bridge/build/moonlight-bridge
+
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
+            mingw-w64-x86_64-pkgconf
+            mingw-w64-x86_64-openssl
+            mingw-w64-x86_64-opus
+      - name: Build
+        run: |
+          cmake -S bridge -B bridge/build -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build bridge/build
+      - name: Check the exe runs
+        run: ./bridge/build/moonlight-bridge.exe --help
+      - uses: actions/upload-artifact@v4
+        with:
+          name: moonlight-bridge-windows-x64
+          path: bridge/build/moonlight-bridge.exe
